@@ -17,16 +17,27 @@ app.use((req, res, next) => {
         'http://localhost:3000',
         'http://localhost:3001',
         'http://127.0.0.1:3000',
-        'http://127.0.0.1:3001'
+        'http://127.0.0.1:3001',
+        'https://dasar-backend-frontend.vercel.app', // Ganti dengan URL Vercel Anda
+        'https://dasar-backend-git-main-yourusername.vercel.app' // Format URL Vercel preview
     ];
     
-    if (allowedOrigins.includes(origin)) {
+    // Di development, izinkan origin yang ada di allowedOrigins
+    // Di production, izinkan semua origin untuk sementara (bisa disesuaikan nanti)
+    if (process.env.NODE_ENV === 'production') {
+        res.setHeader('Access-Control-Allow-Origin', origin || '*');
+    } else if (allowedOrigins.includes(origin)) {
         res.setHeader('Access-Control-Allow-Origin', origin);
     }
     
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     res.setHeader('Access-Control-Allow-Credentials', 'true');
+    
+    // Handle preflight requests
+    if (req.method === 'OPTIONS') {
+        return res.sendStatus(200);
+    }
     
     if (req.method === 'OPTIONS') {
         return res.sendStatus(200);
