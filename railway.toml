@@ -1,6 +1,6 @@
 [build]
   builder = "nixpacks"
-  buildCommand = "./build.sh"
+  buildCommand = "bash build.sh"
   nixpacks = { version = "1.0.0" }
 
 [deploy]
@@ -11,3 +11,4 @@
   NODE_VERSION = "18.0.0"
   NPM_CONFIG_PRODUCTION = "false"
   YARN_VERSION = "1.22.22"
+  PATH = "/root/.nvm/versions/node/v18.0.0/bin:$PATH"
