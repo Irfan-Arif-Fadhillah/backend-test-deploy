@@ -2,6 +2,7 @@
   "name": "dasar-backend",
   "version": "1.0.0",
   "description": "Backend API untuk aplikasi Dasar",
+  "license": "MIT",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
