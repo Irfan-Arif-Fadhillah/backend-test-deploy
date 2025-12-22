@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 const db = require('./models');
 const app = express();
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
@@ -10,41 +11,41 @@ const authRoutes = require('./routes/authRoutes');
 const usersRoutes = require('./routes/usersRoutes');
 const statsRoutes = require('./routes/statsRoutes');
 
-// CORS middleware
-app.use((req, res, next) => {
-    const origin = req.headers.origin;
+// Konfigurasi CORS
+const corsOptions = {
+  origin: function (origin, callback) {
     const allowedOrigins = [
-        'http://localhost:3000',
-        'http://localhost:3001',
-        'http://127.0.0.1:3000',
-        'http://127.0.0.1:3001',
-        'https://dasar-backend-frontend.vercel.app', // Ganti dengan URL Vercel Anda
-        'https://dasar-backend-git-main-yourusername.vercel.app' // Format URL Vercel preview
+      'http://localhost:3000',
+      'http://localhost:3001',
+      'http://127.0.0.1:3000',
+      'http://127.0.0.1:3001',
+      'https://dasar-backend-frontend.vercel.app',
+      'https://dasar-backend-git-main-yourusername.vercel.app'
     ];
-    
-    // Di development, izinkan origin yang ada di allowedOrigins
-    // Di production, izinkan semua origin untuk sementara (bisa disesuaikan nanti)
-    if (process.env.NODE_ENV === 'production') {
-        res.setHeader('Access-Control-Allow-Origin', origin || '*');
-    } else if (allowedOrigins.includes(origin)) {
-        res.setHeader('Access-Control-Allow-Origin', origin);
+
+    // Di development, izinkan localhost dan 127.0.0.1
+    // Di production, hanya izinkan domain yang sudah ditentukan
+    if (process.env.NODE_ENV === 'development' || !origin) {
+      return callback(null, true);
     }
-    
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    
-    // Handle preflight requests
-    if (req.method === 'OPTIONS') {
-        return res.sendStatus(200);
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
     }
-    
-    if (req.method === 'OPTIONS') {
-        return res.sendStatus(200);
-    }
-    
-    next();
-});
+
+    callback(new Error('Not allowed by CORS'));
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+
+// Gunakan CORS middleware
+app.use(cors(corsOptions));
+
+// Handle preflight requests
+app.options('*', cors(corsOptions));
 
 // Middleware
 app.use(express.json());
