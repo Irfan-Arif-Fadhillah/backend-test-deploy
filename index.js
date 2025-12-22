@@ -19,7 +19,9 @@ const corsOptions = {
       'http://127.0.0.1:3000',
       'http://127.0.0.1:3001',
       'https://dasar-backend-frontend.vercel.app',
-      'https://dasar-backend-git-main-yourusername.vercel.app'
+      'https://dasar-backend-git-main-yourusername.vercel.app',
+      'https://web-production-7b6a.up.railway.app',
+      'https://dasar-backend-production-*.up.railway.app' // For potential future deployments
     ];
 
     // In development, allow localhost and 127.0.0.1
